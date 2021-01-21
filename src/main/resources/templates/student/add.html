@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--/*/ <th:block th:include="@{fragments/common}::head(${title})"></th:block> /*/-->
+
+<body>
+<!--/*/ <th:block th:include="@{fragments/common} :: navigation"></th:block> /*/-->
+<div class="container mt-5 h2">Add New Student</div>
+ <div CLASS="container mt-3 form-control">
+     <form th:action="@{/student/save}" method="post" th:object="${studentDto}">
+         <input type="hidden" th:field="*{studentId}">
+         <div class="form-group">
+             <label >Student Name:</label>
+             <input type="text" class="form-control" th:field="*{studentName}" id="studentName" required>
+         </div>
+         <div class="form-group">
+             <label >Student Age:</label>
+             <input type="text" class="form-control" th:field="*{studentAge}" id="studentAge" required>
+         </div>
+         <div class="form-group">
+             <label >Student Gender:</label>
+             <th:block th:each="gender:${genderList}">
+             <div class="radio" >
+                 <input type="radio" th:field="*{studentGender}" th:value="${gender}"> <label th:text="${gender}" ></label>
+             </div>
+             </th:block>
+         </div>
+         <button type="submit" class="btn btn-primary">Save</button>
+     </form>
+ </div>
+
+<script th:src="@{/jQuery/jquery-3.5.1.js}"></script>
+</body>
+</html>

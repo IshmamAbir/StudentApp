@@ -4,13 +4,13 @@
 <head th:fragment="head(title='')">
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
-    <link rel="stylesheet" th:href="@{bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
 </head>
 <!-- ------------------ N a v b a r ---------------------- -->
 <div th:fragment="navigation" >
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <!-- Brand -->
-        <a class="navbar-brand" href="#">PONDIT STUDENT APP</a>
+        <a class="navbar-brand" th:href="@{/}">PONDIT STUDENT APP</a>
 
         <!-- Links -->
         <ul class="navbar-nav">
