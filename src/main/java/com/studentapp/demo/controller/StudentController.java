@@ -25,6 +25,7 @@ public class StudentController {
 
     @GetMapping("/add")
     public String addNewStudent(Model model){
+        model.addAttribute("title","Add Student");
         model.addAttribute("studentDto",new StudentDto());
         model.addAttribute("genderList",getGenderList());
          return "student/add";
