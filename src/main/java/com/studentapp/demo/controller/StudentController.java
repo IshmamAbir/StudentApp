@@ -1,7 +1,10 @@
 package com.studentapp.demo.controller;
 
+import com.studentapp.demo.dto.DepartmentDto;
 import com.studentapp.demo.dto.StudentDto;
+import com.studentapp.demo.entity.Department;
 import com.studentapp.demo.entity.Student;
+import com.studentapp.demo.service.DepartmentService;
 import com.studentapp.demo.service.StudentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -18,9 +21,11 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
+    private final DepartmentService departmentService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, DepartmentService departmentService) {
         this.studentService = studentService;
+        this.departmentService = departmentService;
     }
 
     @GetMapping("/add")
@@ -53,4 +58,6 @@ public class StudentController {
 
         return genderList;
     }
+
+
 }

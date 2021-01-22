@@ -18,4 +18,8 @@ public class Student {
     private String studentGender;
     @Column
     private boolean enabled=true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "student_department",joinColumns = @JoinColumn(name = "studentId"),inverseJoinColumns = @JoinColumn(name = "departmentId"))
+    private Department department;
 }

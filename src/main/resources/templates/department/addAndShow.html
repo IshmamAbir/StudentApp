@@ -4,7 +4,7 @@
 <body>
 <!--/*/ <th:block th:include="@{fragments/common} :: navigation"></th:block> /*/-->
 
-<div class="container mt-5 h2">Add New Department</div>
+<div class="container alert-warning mt-5 h2">Add New Department</div>
 <div CLASS="container mt-3 mb-5 form-control">
     <form th:action="@{/department/save}" method="post" th:object="${departmentDto}">
         <input type="hidden" th:field="*{departmentId}">
@@ -23,7 +23,7 @@
 
 <hr>
 
-<div class="container mt-5 mb-5 h2">Show All Department</div>
+<div class="container alert-warning mt-5 mb-5 h2">Show All Department</div>
 <div class="container">
 
     <table class="table table-striped table-hover">
@@ -44,6 +44,7 @@
         </th:block>
         </tbody>
     </table>
+    <a class="btn-info btn" th:href="@{/department/assignDepartment}">Assign Students to Department</a>
 </div>
 
 

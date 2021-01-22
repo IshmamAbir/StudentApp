@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--/*/ <th:block th:include="@{fragments/common}::head(${title})"></th:block> /*/-->
+<body>
+<!--/*/ <th:block th:include="@{fragments/common} :: navigation"></th:block> /*/-->
+
+<div class="container alert-warning mt-5 h2">Assign Students to Department</div>
+<div CLASS="container mt-3 mb-5 form-control">
+    <form th:action="@{/department/saveAssign}" method="post" th:object="${departmentDto}">
+<!--        <input type="hidden" th:field="*{departmentId}">-->
+        <div class="form-group">
+            <label >Department Name:</label>
+<!--            <input type="text" class="form-control" th:field="*{departmentName}" >-->
+            <select class="form-control"  id="departmentName" th:field="*{departmentId}" required>
+                <option th:value="0">- - - Select Department  - - -</option>
+                <option th:each="type : ${departmentListDto}"
+                        th:value="${type.departmentId}"
+                        th:text="${type.departmentName}+' ('+${type.departmentCode}+')'"></option>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label >Student Name:</label>
+<!--            <input type="text" class="form-control" th:field="*{departmentCode}" id="studentList" required>-->
+            <select class="form-control"  id="studentList" th:field="*{studentIdList}" required multiple>
+                <option th:each="type : ${studentListDto}"
+                        th:value="${type.studentId}"
+                        th:text="${type.studentName}+' ('+${type.studentId}+')'"></option>
+            </select>
+
+        </div>
+
+        <button type="submit" class="btn btn-info">Assign Students to Department</button>
+    </form>
+</div>
+
+
+</body>
+</html>

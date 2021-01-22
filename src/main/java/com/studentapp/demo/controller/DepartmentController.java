@@ -5,6 +5,7 @@ import com.studentapp.demo.dto.StudentDto;
 import com.studentapp.demo.entity.Department;
 import com.studentapp.demo.entity.Student;
 import com.studentapp.demo.service.DepartmentService;
+import com.studentapp.demo.service.StudentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +21,11 @@ import java.util.List;
 @RequestMapping("/department")
 public class DepartmentController {
     private final DepartmentService departmentService;
+    private final StudentService studentService;
 
-    public DepartmentController(DepartmentService departmentService) {
+    public DepartmentController(DepartmentService departmentService, StudentService studentService) {
         this.departmentService = departmentService;
+        this.studentService = studentService;
     }
 
     @GetMapping("/add")
@@ -47,6 +50,33 @@ public class DepartmentController {
     }
 
 
+    @GetMapping("/assignDepartment")
+    public String assignDepartmentToStudent(Model model){
+        model.addAttribute("title","Assign to Department");
+        model.addAttribute("departmentDto",new DepartmentDto());
+        model.addAttribute("departmentListDto",convertDepartmentListToDtoList(departmentService.getAllDepartment()));
+        model.addAttribute("studentListDto",getAllNotAssignedStudent());
+        return "department/assignDepartment";
+    }
+    @PostMapping("/saveAssign")
+    public String saveAssignedStudent(@ModelAttribute DepartmentDto departmentDto){
+        Department department=departmentService.findDepartmentById(departmentDto.getDepartmentId());
+
+        List<Student> studentList=new ArrayList<>();
+        for (long student:departmentDto.getStudentIdList()) {
+            Student student1=studentService.getStudentById(student);
+            studentList.add(student1);
+        }
+        department.setStudentList(studentList);
+
+        departmentService.saveDepartment(department);
+
+        return "redirect:/department/assignDepartment";
+
+    }
+
+
+
 
 
 //    -----------------   H e l p e r     M e t h o d   ------------------------------------
@@ -62,4 +92,30 @@ public class DepartmentController {
         }
         return departmentDtoList;
     }
+
+    private List<StudentDto> convertStudentListToDtoList(List<Student> allStudent) {
+        List<StudentDto> studentDtoList=new ArrayList<>();
+        for (Student student:allStudent) {
+            StudentDto studentDto=new StudentDto();
+            BeanUtils.copyProperties(student,studentDto);
+            studentDtoList.add(studentDto);
+        }
+        return studentDtoList;
+    }
+
+    private List<StudentDto> getAllNotAssignedStudent(){
+        List<Student> studentList=studentService.getAllStudent();
+        List<StudentDto> studentDtoList=new ArrayList<>();
+        for (Student student:studentList) {
+            if (student.getDepartment()==null){
+                StudentDto studentDto=new StudentDto();
+                BeanUtils.copyProperties(student,studentDto);
+                studentDtoList.add(studentDto);
+            }
+        }
+        return studentDtoList;
+    }
+
+
+
 }
