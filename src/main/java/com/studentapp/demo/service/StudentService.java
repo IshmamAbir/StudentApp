@@ -29,4 +29,10 @@ public class StudentService {
         Student student1=optionalStudent.get();
         return student1;
     }
+
+    public void deleteById(long id) {
+        Student student=getStudentById(id);
+        student.setEnabled(false);
+        saveStudent(student);
+    }
 }

@@ -53,7 +53,7 @@ public class StudentController {
          return "student/show";
     }
 
-    @GetMapping("update/{id}")
+    @GetMapping("/update/{id}")
     public String updateStudent(@PathVariable("id")long id,Model model){
         Student student=studentService.getStudentById(id);
         StudentDto studentDto=new StudentDto();
@@ -62,6 +62,13 @@ public class StudentController {
         model.addAttribute("genderList",getGenderList());
 
         return "student/add";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable("id")long id,Model model){
+        studentService.deleteById(id);
+
+        return "redirect:/student/show";
     }
 
 
