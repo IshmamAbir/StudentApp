@@ -36,7 +36,7 @@ public class StudentController {
     @PostMapping("/save")
     public String saveStudent(@ModelAttribute StudentDto studentDto){
         Student student=null;
-        if (studentDto!=null){
+        if (studentDto.getStudentId()!=0){
            student=studentService.getStudentById(studentDto.getStudentId());
         }else {
             student=new Student();
