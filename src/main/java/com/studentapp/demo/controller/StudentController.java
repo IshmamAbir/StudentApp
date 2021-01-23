@@ -9,10 +9,7 @@ import com.studentapp.demo.service.StudentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +35,12 @@ public class StudentController {
 
     @PostMapping("/save")
     public String saveStudent(@ModelAttribute StudentDto studentDto){
-        Student student=new Student();
+        Student student=null;
+        if (studentDto!=null){
+           student=studentService.getStudentById(studentDto.getStudentId());
+        }else {
+            student=new Student();
+        }
         BeanUtils.copyProperties(studentDto,student);
         studentService.saveStudent(student);
 
@@ -50,6 +52,18 @@ public class StudentController {
         model.addAttribute("studentDtoList",convertStudentListToDtoList(studentService.getAllStudent()));
          return "student/show";
     }
+
+    @GetMapping("update/{id}")
+    public String updateStudent(@PathVariable("id")long id,Model model){
+        Student student=studentService.getStudentById(id);
+        StudentDto studentDto=new StudentDto();
+        BeanUtils.copyProperties(student,studentDto);
+        model.addAttribute("studentDto",studentDto);
+        model.addAttribute("genderList",getGenderList());
+
+        return "student/add";
+    }
+
 
 
 
