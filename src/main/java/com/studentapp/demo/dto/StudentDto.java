@@ -12,5 +12,6 @@ public class StudentDto {
     private String studentAge;
     private String studentGender;
     private boolean enabled=true;
+    private DepartmentDto departmentDto;
 
 }

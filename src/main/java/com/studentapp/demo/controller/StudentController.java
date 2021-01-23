@@ -42,9 +42,14 @@ public class StudentController {
         BeanUtils.copyProperties(studentDto,student);
         studentService.saveStudent(student);
 
-        return "redirect:/student/add";
+        return "redirect:/student/show";
     }
 
+    @GetMapping("/show")
+    public String showAllStudent(Model model){
+        model.addAttribute("studentDtoList",convertStudentListToDtoList(studentService.getAllStudent()));
+         return "student/show";
+    }
 
 
 
@@ -57,6 +62,40 @@ public class StudentController {
         genderList.add("Other");
 
         return genderList;
+    }
+
+    private List<StudentDto> convertStudentListToDtoList(List<Student> allStudent) {
+        List<StudentDto> studentDtoList=new ArrayList<>();
+        for (Student student:allStudent) {
+            StudentDto studentDto=new StudentDto();
+            BeanUtils.copyProperties(student,studentDto);
+
+            if (student.getDepartment()==null){
+                DepartmentDto departmentDto=new DepartmentDto();
+                departmentDto.setDepartmentName("Not Assigned");
+                studentDto.setDepartmentDto(departmentDto);
+            }else {
+                DepartmentDto departmentDto=new DepartmentDto();
+                BeanUtils.copyProperties(student.getDepartment(),departmentDto);
+                studentDto.setDepartmentDto(departmentDto);
+            }
+
+            /*DepartmentDto departmentDto=new DepartmentDto();
+            if (student.getDepartment()==null){
+                departmentDto.setDepartmentName("Not Assigned");
+                studentDto.setDepartmentDto(departmentDto);
+            }else {
+                studentDto.setDepartmentDto(departmentDto);
+                departmentDto.setDepartmentName(student.getDepartment().getDepartmentName());
+                departmentDto.setDepartmentCode(student.getDepartment().getDepartmentCode());
+            }
+            BeanUtils.copyProperties(student.getDepartment(),departmentDto);*/
+
+
+            studentDtoList.add(studentDto);
+
+        }
+        return studentDtoList;
     }
 
 

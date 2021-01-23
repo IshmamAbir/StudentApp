@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--/*/ <th:block th:include="@{fragments/common}::head(${title})"></th:block> /*/-->
+
+<body>
+<!--/*/ <th:block th:include="@{fragments/common} :: navigation"></th:block> /*/-->
+
+<div class="container alert-warning mt-5 mb-5 h2">Show All Student</div>
+<div class="container mb-5">
+
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Student Id</th>
+            <th>Student Name</th>
+            <th>Student Age</th>
+            <th>Student Gender</th>
+            <th>Department</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="student:${studentDtoList}">
+            <tr>
+                <td th:text="${student.studentId}"></td>
+                <td th:text="${student.studentName}"></td>
+                <td th:text="${student.studentAge}"></td>
+                <td th:text="${student.studentGender}"></td>
+                <td th:text="${student.departmentDto.departmentName}"></td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" th:href="@{/student/update}" class="btn btn-warning">Update</button>
+                        <button type="button" th:href="@{/student/delete}" class="btn btn-danger">Delete</button>
+
+                    </div>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+    <hr>
+    <a class="btn-warning btn btn-block mt-5" th:href="@{/student/add}">Add Another Students</a>
+    <a class="btn-info btn btn-block mt-2" th:href="@{/department/assignDepartment}">Assign Students to Department</a>
+</div>
+
+
+<script th:src="@{/jQuery/jquery-3.5.1.js}"></script>
+</body>
+</html>
