@@ -47,6 +47,28 @@
     </form>
 </div>
 
+<div class="container alert-warning mt-5 mb-5 h2">Show All Subject</div>
+<div class="container mb-3">
+
+    <table class=" table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>SL</th>
+            <th>Subject Name</th>
+            <th>Subject Code</th>
+            <th>Credit Hour</th>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+
+        </tbody>
+    </table>
+    <hr>
+    <a class="btn-info btn btn-block mt-3" th:href="@{/student/show}">Show All Students</a>
+</div>
+
+
+
 
 <script th:src="@{/jQuery/jquery-3.5.1.js}"></script>
 
@@ -55,6 +77,35 @@
     $(document).ready(function () {
 
         $(".successMessage").hide();
+
+        $.ajax({
+            url: '/subject/show',
+
+            method: 'GET',
+
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+
+            success: function (response) {
+                $.each(response, function (i, subject) {
+
+                    var row = `<tr>
+                                 <td>${$('.table-body tr').length + 1}</td>
+                                 <td>${subject.subjectName}</td>
+                                 <td>${subject.subjectCode}</td>
+                                 <td>${subject.subjectCreditHour}</td>
+                        </tr>`;
+
+                    $(".table-body").append(row);
+
+                });
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
 
         $(".subjectSaveForm").on('submit', function (e) {
 
@@ -76,6 +127,15 @@
                     console.log(response);
                     $(".successMessage").show();
 
+                    var row = `<tr>
+                                 <td>${$('.table-body tr').length + 1}</td>
+                                 <td>${response.subjectName}</td>
+                                 <td>${response.subjectCode}</td>
+                                 <td>${response.subjectCreditHour}</td>
+                        </tr>`;
+
+                    $(".table-body").append(row);
+
                     $("input").val("");
                 },
 
@@ -84,6 +144,7 @@
                 }
             });
         });
+
 
 
         /*--------The Following Code Is For Converting Json Object To Our Requird Object --------*/

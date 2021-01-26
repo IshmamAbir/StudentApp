@@ -35,7 +35,7 @@ public class SubjectController {
         return "subject/add";
     }
 
-    @PostMapping(value="/save",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/save")
     @ResponseBody
     public SubjectDto saveSubject(@RequestBody SubjectDto subjectDto){
         Subject subject=new Subject();
@@ -45,6 +45,16 @@ public class SubjectController {
 
         return subjectDto;
     }
+
+    @GetMapping(value="/show",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<SubjectDto> showAllSubject(){
+        List<Subject> subjectList=subjectService.getAllSubject();
+        List<SubjectDto> subjectDtoList=convertSubjectListToDtoList(subjectList);
+        return subjectDtoList;
+    }
+
+
 
 // -------------------------  H e l p e r    M e t h o d  ---------------------------
 
@@ -66,6 +76,15 @@ public class SubjectController {
             departmentList.add(department);
         }
         return departmentList;
+    }
 
+    private List<SubjectDto> convertSubjectListToDtoList(List<Subject> subjectList) {
+        List<SubjectDto> subjectDtoList=new ArrayList<>();
+        for (Subject subject:subjectList) {
+            SubjectDto subjectDto=new SubjectDto();
+            BeanUtils.copyProperties(subject,subjectDto);
+            subjectDtoList.add(subjectDto);
+        }
+        return subjectDtoList;
     }
 }
