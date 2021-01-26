@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--/*/ <th:block th:include="@{fragments/common}::head(${title})"></th:block> /*/-->
+
+
+<body>
+<!--/*/ <th:block th:include="@{fragments/common} :: navigation"></th:block> /*/-->
+
+
+<div class="container alert-warning mt-5 h2">Add New Subject</div>
+<div CLASS="container mt-3 mb-5 form-control">
+
+    <form class="subjectSaveForm" > <!--th:action="@{/department/save}" method="post" th:object="${departmentDto}"-->
+        <input type="hidden" name="subjectId"> <!--th:field="*{subjectId}"-->
+        <div class="form-group">
+            <label >Subject Name:</label>
+            <input type="text" class="form-control"  name="subjectName" required> <!--th:field="*{subjectName}"-->
+        </div>
+
+        <div class="form-group">
+            <label >Subject Code:</label>
+            <input type="text" class="form-control" name="subjectCode" required> <!-- th:field="*{subjectCode}"-->
+        </div>
+
+        <div class="form-group">
+            <label >Credit Hour:</label>
+            <input type="number" min="1" step="any" max="5" class="form-control" name="subjectCreditHour" required> <!-- th:field="*{subjectCreditHour}"-->
+        </div>
+
+        <div class="form-group">
+            <label >Department Name:</label>
+            <!--            <input type="text" class="form-control" th:field="*{departmentName}" >-->
+            <select class="departmentList form-control"  name="departmentIdList" required multiple>  <!-- th:field="*{departmentId}"-->
+                <option disabled selected >- - - Select Department  - - -</option>
+                <option th:each="type : ${departmentListDto}"
+                        th:value="${type.departmentId}"
+                        th:text="${type.departmentName}+' ('+${type.departmentCode}+')'"></option>
+            </select>
+
+        </div>
+
+        <button type="submit" class="btn btn-info">Save Subject</button>
+        <div class="successMessage alert alert-success mt-5">
+            Successfully data Saved in Database
+        </div>
+
+    </form>
+</div>
+
+
+<script th:src="@{/jQuery/jquery-3.5.1.js}"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $(".successMessage").hide();
+
+        $(".subjectSaveForm").on('submit', function (e) {
+
+            e.preventDefault();     /*------- Page Reload Prevent -------*/
+
+            $.ajax({
+                data: JSON.stringify($(this).serializeObject()),
+
+                url: '/subject/save',    /*------- Controller And Method Map -------*/
+
+                method: 'POST',                  /*------- By Default GET -------*/
+
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+
+                success: function (response) {
+                    console.log(response);
+                    $(".successMessage").show();
+
+                    $("input").val("");
+                },
+
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+
+        /*--------The Following Code Is For Converting Json Object To Our Requird Object --------*/
+
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
+    });
+</script>
+
+</body>
+</html>

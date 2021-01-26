@@ -1,5 +1,6 @@
 package com.studentapp.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,8 +19,10 @@ public class Department {
     @Column
     private boolean enabled=true;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "student_department",joinColumns = @JoinColumn(name = "departmentId"),inverseJoinColumns = @JoinColumn(name = "studentId"))
     private List<Student> studentList;
+
 
 }
