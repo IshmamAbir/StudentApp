@@ -24,5 +24,9 @@ public class Department {
     @JoinTable(name = "student_department",joinColumns = @JoinColumn(name = "departmentId"),inverseJoinColumns = @JoinColumn(name = "studentId"))
     private List<Student> studentList;
 
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "department_subject",joinColumns = @JoinColumn(name = "departmentId"),inverseJoinColumns = @JoinColumn(name = "subjectId"))
+    private List<Subject> subjectList;
 
 }

@@ -2,17 +2,17 @@ package com.studentapp.demo.controller;
 
 import com.studentapp.demo.dto.DepartmentDto;
 import com.studentapp.demo.dto.StudentDto;
+import com.studentapp.demo.dto.SubjectDto;
 import com.studentapp.demo.entity.Department;
 import com.studentapp.demo.entity.Student;
+import com.studentapp.demo.entity.Subject;
 import com.studentapp.demo.service.DepartmentService;
 import com.studentapp.demo.service.StudentService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,14 +68,26 @@ public class DepartmentController {
             studentList.add(student1);
         }
         department.setStudentList(studentList);
-
         departmentService.saveDepartment(department);
 
         return "redirect:/department/assignDepartment";
-
     }
 
+    @GetMapping("/details")
+    public String showDetails(Model model){
+        model.addAttribute("title","View Details");
+        model.addAttribute("departmentListDto",convertDepartmentListToDtoList(departmentService.getAllDepartment()));
 
+        return "department/userDetails";
+    }
+
+    @GetMapping(value = "/getStudentAndSubject/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public DepartmentDto getStudentAndSubjectDetails(@PathVariable("id")long departmentId){
+        Department department=departmentService.findDepartmentById(departmentId);
+
+        return convertDepartmentToDto(department);
+    }
 
 
 
@@ -116,6 +128,29 @@ public class DepartmentController {
         return studentDtoList;
     }
 
+    private List<SubjectDto> convertSubjectListToDtoList(List<Subject> subjectList){
+        List<SubjectDto> subjectDtoList=new ArrayList<>();
+        for (Subject subject:subjectList) {
+            SubjectDto subjectDto=new SubjectDto();
+            BeanUtils.copyProperties(subject,subjectDto);
+            subjectDtoList.add(subjectDto);
+        }
+        return subjectDtoList;
+    }
+
+
+    private DepartmentDto convertDepartmentToDto(Department department) {
+        DepartmentDto departmentDto=new DepartmentDto();
+        BeanUtils.copyProperties(department,departmentDto);
+
+        List<Student> studentList=department.getStudentList();
+        departmentDto.setStudentDtoList(convertStudentListToDtoList(studentList));
+
+        List<Subject> subjectList=department.getSubjectList();
+        departmentDto.setSubjectDtoList(convertSubjectListToDtoList(subjectList));
+
+        return departmentDto;
+    }
 
 
 }

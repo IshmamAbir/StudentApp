@@ -12,4 +12,6 @@ public class DepartmentDto {
     private boolean enabled=true;
     private List<StudentDto> studentDtoList;
     private List<Long> studentIdList;
+    private List<SubjectDto> subjectDtoList;
+    private List<Long> subjectIdList;
 }

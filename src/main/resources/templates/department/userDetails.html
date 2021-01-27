@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--/*/ <th:block th:include="@{fragments/common}::head(${title})"></th:block> /*/-->
+
+
+<body>
+<!--/*/ <th:block th:include="@{fragments/common} :: navigation"></th:block> /*/-->
+
+<div class="container alert-warning mt-5 h2">Add New Subject</div>
+<div CLASS="container mt-3 mb-5 form-control">
+
+    <form class="subjectSaveForm" > <!--th:action="@{/}" method="post" th:object="${}"-->
+
+        <div class="form-group">
+            <label >Department Name:</label>
+            <select class="departmentList form-control"  name="departmentIdList" required >  <!-- th:field="*{}"-->
+                <option disabled selected >- - - Select Department  - - -</option>
+                <option th:each="type : ${departmentListDto}"
+                        th:value="${type.departmentId}"
+                        th:text="${type.departmentName}+' ('+${type.departmentCode}+')'"></option>
+            </select>
+
+        </div>
+
+        <div class="form-group">
+            <label >Student Name:</label>
+            <select class="studentList form-control" required>  <!-- th:field="*{}"-->
+                <option disabled selected >- - - Select Student  - - -</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label >Subject Name:</label>
+            <select class="subjectList form-control" required>  <!-- th:field="*{}"-->
+                <option disabled selected >- - - Select Subject  - - -</option>
+            </select>
+        </div>
+
+    </form>
+</div>
+
+<script th:src="@{/jQuery/jquery-3.5.1.js}"></script>
+<script>
+    $(document).ready(function (){
+
+        $(".studentList").prop("disabled",true);
+        $(".subjectList").prop("disabled",true);
+
+        $(".departmentList").on("change",function (e) {
+            e.preventDefault();
+            $(".studentList").empty();
+            $(".subjectList").empty();
+            $(".studentList").append(`<option disabled selected >- - - Select Student  - - -</option>`);
+            $(".subjectList").append(`<option disabled selected >- - - Select Subject  - - -</option>`);
+
+            $(".studentList").prop("disabled",false);
+            $(".subjectList").prop("disabled",false);
+
+            var id= $(".departmentList option:selected").val();
+
+            $.ajax({
+                url: '/department/getStudentAndSubject/'+id,
+
+                method: 'GET',
+
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+
+                success: function (response) {
+
+                    $.each(response.studentDtoList, function (i, student) {
+                        var option= `<option value="${student.studentId}">${student.studentName}</option>`;
+                        $(".studentList").append(option);
+                    });
+
+                    $.each(response.subjectDtoList, function (i, subject) {
+                        var option= `<option value="${subject.subjectId}">${subject.subjectName}</option>`;
+                        $(".subjectList").append(option);
+                    });
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+
+
+        });
+
+
+        /*--------The Following Code Is For Converting Json Object To Our Requird Object --------*/
+
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+    });
+</script>
+</body>
+</html>
